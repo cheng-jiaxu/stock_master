@@ -11,6 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class UserController {
     @Autowired
     private UserService userservice;
@@ -28,7 +29,7 @@ public class UserController {
 
     @GetMapping("/captcha")
     public R<Map> getCaptchaCode(){
-        return userservice.getCapchaCode;
+        return userservice.getCaptchaCode();
     }
 
 }
