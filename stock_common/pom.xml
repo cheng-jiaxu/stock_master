@@ -90,7 +90,7 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
         <!-- ... existing code ... -->
-        <!-- 添加 SpringDoc OpenAPI 依赖 -->
+        <!-- 添加 SpringDoc OpenAPI 依赖 1-->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
