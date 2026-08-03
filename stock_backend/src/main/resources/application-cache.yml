@@ -1,0 +1,16 @@
+spring:
+  data:
+    redis:
+      host: 172.16.39.131
+      port: 6379
+      database: 0
+      password: 137169
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          max-wait: -1ms
+          min-idle: 1
+      timeout: PT10S
+  profiles:
+    active: cache
