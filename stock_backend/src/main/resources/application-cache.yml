@@ -12,5 +12,3 @@ spring:
           max-wait: -1ms
           min-idle: 1
       timeout: PT10S
-  profiles:
-    active: cache

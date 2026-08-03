@@ -1,6 +1,8 @@
 server:
   port: 8091
 spring:
+  profiles:
+    active: cache
   datasource:
     url: jdbc:mysql://172.16.39.131:3306/stock_db?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
@@ -16,4 +18,6 @@ mybatis:
 pagehelper:
   helper-dialect: mysql
   reasonable: true
+
+
 
