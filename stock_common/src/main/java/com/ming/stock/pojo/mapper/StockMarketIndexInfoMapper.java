@@ -1,6 +1,11 @@
 package com.ming.stock.pojo.mapper;
 
+import com.ming.stock.domain.InnerMarketDomain;
 import com.ming.stock.pojo.entity.StockMarketIndexInfo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
+import java.util.List;
 
 /**
 * @author jingjing
@@ -21,5 +26,7 @@ public interface StockMarketIndexInfoMapper {
     int updateByPrimaryKeySelective(StockMarketIndexInfo record);
 
     int updateByPrimaryKey(StockMarketIndexInfo record);
+
+    List<InnerMarketDomain> getMarketInfo(@Param("curDate") Date curDate,@Param("marketCodes") List<String> marketCodes);
 
 }
