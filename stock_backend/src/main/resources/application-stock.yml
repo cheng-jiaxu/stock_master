@@ -1,0 +1,10 @@
+stock:
+  inner:
+    - sh000001
+    - sz399001
+  outer:
+    - int_dji
+    - int_nasdaq
+    - int_hangseng
+    - int_nikkei
+    - b_FSSTI
