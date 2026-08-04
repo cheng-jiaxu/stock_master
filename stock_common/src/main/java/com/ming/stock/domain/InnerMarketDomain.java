@@ -22,6 +22,9 @@ public class InnerMarketDomain {
     @Schema(description = "当前点")
     private BigDecimal curPoint;
 
+    @Schema(description = "前收盘点")
+    private BigDecimal preClosePoint;
+
     @Schema(description = "交易量")
     private Long tradeAmt;
 
