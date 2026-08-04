@@ -1,6 +1,7 @@
 package com.ming.stock.config;
 
 import com.ming.stock.utils.IdWorker;
+import com.ming.stock.vo.StockInfoConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,6 +30,10 @@ public class CommonConfig {
         //参数1:机器id 参数2:机房id 一般有运维人员定唯一性
         //基于运维人员对机房和机器的编号自行约定
         return new IdWorker(1L,2L);
+    }
+    @Bean
+    public StockInfoConfig stockInfoConfig() {
+        return new StockInfoConfig();
     }
 
 }
