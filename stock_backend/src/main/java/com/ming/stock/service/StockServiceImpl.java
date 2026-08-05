@@ -1,6 +1,8 @@
 package com.ming.stock.service;
 
 import com.ming.stock.domain.InnerMarketDomain;
+import com.ming.stock.domain.StockBlockDomain;
+import com.ming.stock.pojo.mapper.StockBlockRtInfoMapper;
 import com.ming.stock.pojo.mapper.StockMarketIndexInfoMapper;
 import com.ming.stock.vo.StockInfoConfig;
 import com.ming.stock.vo.resp.R;
@@ -18,6 +20,8 @@ public class StockServiceImpl implements StockService {
     private StockInfoConfig stockInfoConfig;
     @Autowired
     private StockMarketIndexInfoMapper stockMarketIndexInfoMapper;
+    @Autowired
+    private StockBlockRtInfoMapper stockBlockRtInfoMapper;
 
     @Override
     public R<List<InnerMarketDomain>> getInnerMarketInfo() {
@@ -31,6 +35,14 @@ public class StockServiceImpl implements StockService {
         //3.调用mapper查询数据
         List<InnerMarketDomain> data = stockMarketIndexInfoMapper.getMarketInfo(curDate,mCodes);
         //4.封装并响应
+        return R.ok(data);
+    }
+
+    @Override
+    public R<List<StockBlockDomain>> sectorAllLimit() {
+        Date timePoint = DateTime.parse("2022-12-21 09:30:00",
+                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+        List<StockBlockDomain> data = stockBlockRtInfoMapper.sectorAllLimit(timePoint);
         return R.ok(data);
     }
 }
