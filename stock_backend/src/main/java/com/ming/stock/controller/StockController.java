@@ -1,6 +1,7 @@
 package com.ming.stock.controller;
 
 import com.ming.stock.domain.InnerMarketDomain;
+import com.ming.stock.domain.StockBlockDomain;
 import com.ming.stock.service.StockService;
 import com.ming.stock.vo.resp.R;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +23,10 @@ public class StockController {
     @GetMapping("/index/all")
     public R<List<InnerMarketDomain>> getInnerMarketInfo(){
         return stockService.getInnerMarketInfo();
+    }
+
+    @GetMapping("/sector/all")
+    public R<List<StockBlockDomain>> sectorAllLimit(){
+        return  stockService.sectorAllLimit();
     }
 }
