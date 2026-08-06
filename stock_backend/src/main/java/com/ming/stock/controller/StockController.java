@@ -6,6 +6,7 @@ import com.ming.stock.domain.StockUpdownDomain;
 import com.ming.stock.service.StockService;
 import com.ming.stock.vo.resp.PageResult;
 import com.ming.stock.vo.resp.R;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description: 定义股票相关接口控制器
@@ -41,5 +43,12 @@ public class StockController {
     public R<List<StockUpdownDomain>> getTopStocksByIncrease(){
         return stockService.getTopStocksByIncrease();
     }
-
+    @Operation(
+            summary = "查询每分钟涨停或者跌停数量",
+            description = "查询指定时间范围内每分钟涨停或者跌停的数量；flag=1涨停，flag=0跌停，开始结束时间建议同一天"
+    )
+    @GetMapping("stock/updown/count")
+    public R<Map<String,List>> getStockUpDownCount(){
+        return stockService.getStockUpDownCount();
+    }
 }
