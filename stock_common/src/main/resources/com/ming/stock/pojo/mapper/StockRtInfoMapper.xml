@@ -60,6 +60,21 @@
         order by upDown desc
         limit 4
     </select>
+    <select id="getStockUpDownCount" resultType="java.util.Map">
+        SELECT
+        date_format( cur_time, '%Y%m%d%H%i') as time,
+        COUNT(*) AS count
+        FROM stock_rt_info
+        WHERE cur_time BETWEEN #{startDate} AND #{endDate}
+        AND (cur_price - pre_close_price) / pre_close_price
+        <if test="flag==1">
+           >=0.1
+        </if>
+        <if test="flag==0">
+            &lt;= -0.1
+        </if>
+        GROUP BY time
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from stock_rt_info

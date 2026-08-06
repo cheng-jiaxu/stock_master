@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author jingjing
@@ -28,6 +29,10 @@ public interface StockRtInfoMapper {
     int updateByPrimaryKey(StockRtInfo record);
 
     List<StockUpdownDomain> getStockInfoByTime(@Param("curDate") Date CurDate);
+
     List<StockUpdownDomain> getTopStocksByIncrease(@Param("curDate") Date CurDate);
+
+    List<Map> getStockUpDownCount(@Param("startDate")Date startDate,
+                                  @Param("endDate")Date EndDate,@Param("flag") Integer flag);
 
 }
