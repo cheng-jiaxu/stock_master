@@ -29,6 +29,37 @@
         from stock_rt_info
         where  id = #{id} 
     </select>
+    <select id="getStockInfoByTime" resultType="com.ming.stock.domain.StockUpdownDomain">
+        select sri.trade_amount as tradeAmt,
+        sri.stock_code as code,
+        sri.stock_name as name,
+        sri.trade_volume as tradeVol,
+        (sri.cur_price-sri.pre_close_price)/sri.pre_close_price as increase,
+        (sri.cur_price-sri.pre_close_price) as upDown,
+        (sri.max_price-sri.min_price)/sri.pre_close_price as amplitude,
+        sri.cur_price as tradePrice,
+        sri.pre_close_price as preClosePrice,
+        sri.cur_time as curDate
+        from stock_rt_info as sri
+        where cur_time = #{curDate}
+        order by upDown desc
+    </select>
+    <select id="getTopStocksByIncrease" resultType="com.ming.stock.domain.StockUpdownDomain">
+        select sri.trade_amount as tradeAmt,
+        sri.stock_code as code,
+        sri.stock_name as name,
+        sri.trade_volume as tradeVol,
+        (sri.cur_price-sri.pre_close_price)/sri.pre_close_price as increase,
+        (sri.cur_price-sri.pre_close_price) as upDown,
+        (sri.max_price-sri.min_price)/sri.pre_close_price as amplitude,
+        sri.cur_price as tradePrice,
+        sri.pre_close_price as preClosePrice,
+        sri.cur_time as curDate
+        from stock_rt_info as sri
+        where cur_time = #{curDate}
+        order by upDown desc
+        limit 4
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from stock_rt_info

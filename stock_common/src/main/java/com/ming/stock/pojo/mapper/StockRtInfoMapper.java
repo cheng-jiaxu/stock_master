@@ -1,6 +1,11 @@
 package com.ming.stock.pojo.mapper;
 
+import com.ming.stock.domain.StockUpdownDomain;
 import com.ming.stock.pojo.entity.StockRtInfo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
+import java.util.List;
 
 /**
 * @author jingjing
@@ -21,5 +26,8 @@ public interface StockRtInfoMapper {
     int updateByPrimaryKeySelective(StockRtInfo record);
 
     int updateByPrimaryKey(StockRtInfo record);
+
+    List<StockUpdownDomain> getStockInfoByTime(@Param("curDate") Date CurDate);
+    List<StockUpdownDomain> getTopStocksByIncrease(@Param("curDate") Date CurDate);
 
 }
