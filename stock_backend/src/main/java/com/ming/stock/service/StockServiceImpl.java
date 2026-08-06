@@ -8,6 +8,7 @@ import com.ming.stock.domain.StockUpdownDomain;
 import com.ming.stock.pojo.mapper.StockBlockRtInfoMapper;
 import com.ming.stock.pojo.mapper.StockMarketIndexInfoMapper;
 import com.ming.stock.pojo.mapper.StockRtInfoMapper;
+import com.ming.stock.utils.DateTimeUtil;
 import com.ming.stock.vo.StockInfoConfig;
 import com.ming.stock.vo.resp.PageResult;
 import com.ming.stock.vo.resp.R;
@@ -17,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StockServiceImpl implements StockService {
@@ -71,5 +74,19 @@ public class StockServiceImpl implements StockService {
                 DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
         List<StockUpdownDomain> data = stockRtInfoMapper.getTopStocksByIncrease(timePoint);
         return R.ok(data);
+    }
+
+    @Override
+    public R<Map<String, List>> getStockUpDownCount() {
+        DateTime curDateTime = DateTime.parse("2023-01-06 14:25:00",
+                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
+        Date endDate = curDateTime.toDate();
+        Date startDate = DateTimeUtil.getOpenDate(curDateTime).toDate();
+        List<Map> uplist = stockRtInfoMapper.getStockUpDownCount(startDate,endDate,1);
+        List<Map> downlist = stockRtInfoMapper.getStockUpDownCount(startDate,endDate,0);
+        HashMap<String,List> info = new HashMap<>();
+        info.put("uplist",uplist);
+        info.put("downlist",downlist);
+        return R.ok(info);
     }
 }

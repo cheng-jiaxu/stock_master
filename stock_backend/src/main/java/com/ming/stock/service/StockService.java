@@ -7,6 +7,7 @@ import com.ming.stock.vo.resp.PageResult;
 import com.ming.stock.vo.resp.R;
 
 import java.util.List;
+import java.util.Map;
 
 public interface StockService {
     /**
@@ -17,4 +18,5 @@ public interface StockService {
     R<List<StockBlockDomain>> sectorAllLimit();
     R<PageResult<StockUpdownDomain>> getStockInfoByPage(Integer Page, Integer PageSize);
     R<List<StockUpdownDomain>> getTopStocksByIncrease();
+    R<Map<String,List>> getStockUpDownCount();
 }
