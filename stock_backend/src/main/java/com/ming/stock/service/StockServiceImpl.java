@@ -143,4 +143,23 @@ public class StockServiceImpl implements StockService {
             log.info("当前导出数据异常，当前页：{},每页大小：{},异常信息： {}",Page,PageSize,e.getMessage());
         }
     }
+
+    @Override
+    public R<Map<String, List>> getComparedStockTradeAmt() {
+        DateTime EndDateTime = DateTimeUtil.getLastDate4Stock(DateTime.now());
+        EndDateTime = DateTime.parse("2022-12-29 14:30:00",DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
+        Date endDate = EndDateTime.toDate();
+        Date startDate = DateTimeUtil.getOpenDate(EndDateTime).toDate();
+        DateTime preEndDateTime = DateTime.parse("2022-12-28 14:30:00",DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
+        Date preEndDate = preEndDateTime.toDate();
+        Date preStartDate = DateTimeUtil.getOpenDate(preEndDateTime).toDate();
+        List<Map> preData = stockMarketIndexInfoMapper.getSumAmtInfo(preStartDate,preEndDate,stockInfoConfig.getInner());
+        List<Map> Data = stockMarketIndexInfoMapper.getSumAmtInfo(startDate,endDate,stockInfoConfig.getInner());
+        HashMap<String,List> info = new HashMap<>();
+        info.put("amtList",Data);
+        info.put("yesAmtList",preData);
+        return R.ok(info);
+
+
+    }
 }

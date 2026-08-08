@@ -11,6 +11,7 @@
     <modules>
         <module>stock_common</module>
         <module>stock_backend</module>
+        <module>stock_job</module>
     </modules>
 
     <!-- 设置 JDK 版本 -->

@@ -21,4 +21,5 @@ public interface StockService {
     R<List<StockUpdownDomain>> getTopStocksByIncrease();
     R<Map<String,List>> getStockUpDownCount();
     void exportStockUpdownInfo(Integer Page, Integer PageSize, HttpServletResponse response);
+    R<Map<String,List>> getComparedStockTradeAmt();
 }

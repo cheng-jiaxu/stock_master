@@ -55,6 +55,9 @@ public class StockController {
     @GetMapping("/stock/export")
     public void exportsStockUpDownInfo(@RequestParam(name="page",required = false,defaultValue = "1")Integer Page, @RequestParam(name = "PageSize",required = false,defaultValue = "20") Integer PageSize, HttpServletResponse response){
         stockService.exportStockUpdownInfo(Page,PageSize,response);
-
+    }
+    @GetMapping("stock/tradeAmt")
+    public R<Map<String,List>> getComparedStockTradeAmt(){
+        return stockService.getComparedStockTradeAmt();
     }
 }
