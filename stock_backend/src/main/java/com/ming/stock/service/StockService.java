@@ -5,6 +5,7 @@ import com.ming.stock.domain.StockBlockDomain;
 import com.ming.stock.domain.StockUpdownDomain;
 import com.ming.stock.vo.resp.PageResult;
 import com.ming.stock.vo.resp.R;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -19,4 +20,5 @@ public interface StockService {
     R<PageResult<StockUpdownDomain>> getStockInfoByPage(Integer Page, Integer PageSize);
     R<List<StockUpdownDomain>> getTopStocksByIncrease();
     R<Map<String,List>> getStockUpDownCount();
+    void exportStockUpdownInfo(Integer Page, Integer PageSize, HttpServletResponse response);
 }

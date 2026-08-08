@@ -7,6 +7,7 @@ import com.ming.stock.service.StockService;
 import com.ming.stock.vo.resp.PageResult;
 import com.ming.stock.vo.resp.R;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,5 +51,10 @@ public class StockController {
     @GetMapping("stock/updown/count")
     public R<Map<String,List>> getStockUpDownCount(){
         return stockService.getStockUpDownCount();
+    }
+    @GetMapping("/stock/export")
+    public void exportsStockUpDownInfo(@RequestParam(name="page",required = false,defaultValue = "1")Integer Page, @RequestParam(name = "PageSize",required = false,defaultValue = "20") Integer PageSize, HttpServletResponse response){
+        stockService.exportStockUpdownInfo(Page,PageSize,response);
+
     }
 }

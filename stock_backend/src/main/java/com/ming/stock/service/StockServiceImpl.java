@@ -1,5 +1,7 @@
 package com.ming.stock.service;
 
+import com.alibaba.excel.EasyExcel;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ming.stock.domain.InnerMarketDomain;
@@ -12,17 +14,25 @@ import com.ming.stock.utils.DateTimeUtil;
 import com.ming.stock.vo.StockInfoConfig;
 import com.ming.stock.vo.resp.PageResult;
 import com.ming.stock.vo.resp.R;
+import com.ming.stock.vo.resp.ResponseCode;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class StockServiceImpl implements StockService {
     @Autowired
     private StockInfoConfig stockInfoConfig;
@@ -88,5 +98,49 @@ public class StockServiceImpl implements StockService {
         info.put("uplist",uplist);
         info.put("downlist",downlist);
         return R.ok(info);
+    }
+
+    @Override
+    public void exportStockUpdownInfo(Integer Page, Integer PageSize, HttpServletResponse response) {
+        try {
+            //1.获取最近最新的一次股票有效交易时间点（精确分钟）
+
+            //在数据库中是没有的，所以，先临时指定一个假数据,后续注释掉该代码即可
+            Date curDate=DateTime.parse("2022-12-31 09:47:00",
+                    DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+            //2.设置分页参数 底层会拦截mybatis发送的sql，并动态追加limit语句实现分页
+            PageHelper.startPage(Page,PageSize);
+            //3.查询
+            List<StockUpdownDomain>
+                    infos=stockRtInfoMapper.getStockInfoByTime(curDate);
+            //如果集合为空，响应错误提示信息
+            if (CollectionUtils.isEmpty(infos)) {
+                //响应提示信息
+                R<Object> r = R.error(ResponseCode.NO_RESPONSE_DATA);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("utf-8");
+                response.getWriter().write(new
+                        ObjectMapper().writeValueAsString(r));
+                return;
+            }
+            //设置响应excel文件格式类型
+            response.setContentType("application/vnd.ms-excel");
+            //2.设置响应数据的编码格式
+            response.setCharacterEncoding("utf-8");
+            //3.设置默认的文件名称
+            // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+            String fileName = URLEncoder.encode("stockRt", "UTF-8");
+            //设置默认文件名称：兼容一些特殊浏览器
+            response.setHeader("content-disposition", "attachment;filename=" +
+                    fileName + ".xlsx");
+            //4.响应excel流
+            EasyExcel
+                    .write(response.getOutputStream(),StockUpdownDomain.class)
+                    .sheet("股票信息")
+                    .doWrite(infos);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.info("当前导出数据异常，当前页：{},每页大小：{},异常信息： {}",Page,PageSize,e.getMessage());
+        }
     }
 }
