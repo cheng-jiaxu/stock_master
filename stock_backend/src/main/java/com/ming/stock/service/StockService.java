@@ -22,4 +22,5 @@ public interface StockService {
     R<Map<String,List>> getStockUpDownCount();
     void exportStockUpdownInfo(Integer Page, Integer PageSize, HttpServletResponse response);
     R<Map<String,List>> getComparedStockTradeAmt();
+    R<Map> getIncreaseRangeInfoByDate();
 }

@@ -75,6 +75,26 @@
         </if>
         GROUP BY time
     </select>
+    <select id="getIncreaseRangeInfoByDate" resultType="java.util.Map">
+        select
+        tmp2.title,
+        count(*) as count
+        from (select
+        case
+        when tmp.rate >0.07 then '>7%'
+        when tmp.rate >0.05 and tmp.rate &lt;=0.07 then '5%~7%'
+        when tmp.rate >0.03 and tmp.rate &lt;=0.05 then '3%~5%'
+        when tmp.rate >0    and tmp.rate &lt;=0.03 then '0~3%'
+        when tmp.rate >-0.03 and tmp.rate &lt;=0   then '-3%~0'
+        when tmp.rate >-0.05 and tmp.rate &lt;-0.03 then'-5%~-3%'
+        when tmp.rate >-0.07 and tmp.rate &lt;=-0.05 then '-7%~-5%'
+        else '&lt;7%'
+        end 'title'
+        from(select (sri.cur_price-pre_close_price)/pre_close_price as rate
+        from stock_rt_info as sri
+        where cur_time = #{curTime} )as tmp)
+        as tmp2 group by tmp2.title;
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from stock_rt_info

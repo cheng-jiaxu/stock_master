@@ -26,10 +26,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -159,7 +157,30 @@ public class StockServiceImpl implements StockService {
         info.put("amtList",Data);
         info.put("yesAmtList",preData);
         return R.ok(info);
-
-
     }
-}
+
+    @Override
+    public R<Map> getIncreaseRangeInfoByDate() {
+        DateTime curDateTime = DateTime.parse("2022-12-30 09:32:00",DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
+        Date curDate = curDateTime.toDate();
+        List<Map> infos = stockRtInfoMapper.getIncreaseRangeInfoByDate(curDate);
+        List<String> upDownRage = stockInfoConfig.getUpDownRange();
+        List<Map> allInfos = upDownRage.stream().map(title -> {
+            Optional<Map> result = infos.stream().filter(map -> map.containsValue(title)).findFirst();
+            if (result.isPresent()) {
+                return result.get();
+            } else {
+                HashMap<String, Object> tmp = new HashMap<>();
+                tmp.put("count", 0);
+                tmp.put("title", title);
+                return tmp;
+            }
+        }).collect(Collectors.toList());
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("time",curDateTime.toString("yyyy-MM-dd HH:mm:ss"));
+        data.put("infos",allInfos);
+        return R.ok(data);
+        }
+    }
+
+

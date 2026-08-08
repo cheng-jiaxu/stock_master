@@ -60,4 +60,10 @@ public class StockController {
     public R<Map<String,List>> getComparedStockTradeAmt(){
         return stockService.getComparedStockTradeAmt();
     }
+    @Operation(summary = "统计最新交易时间点下股票(A股) 在各个涨幅区间的数量",
+            description = "统计最新交易时间点下股票(A股) 在各个涨幅区间的数量")
+    @GetMapping("/stock/updown")
+    public R<Map> getIncreaseRangeInfo(){
+        return stockService.getIncreaseRangeInfoByDate();
+    }
 }

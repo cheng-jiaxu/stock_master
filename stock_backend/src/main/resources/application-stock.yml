@@ -8,3 +8,11 @@ stock:
     - int_hangseng
     - int_nikkei
     - b_FSSTI
+  upDownRange:
+    - ">7%"
+    - "3%~5%"
+    - "0~3%"
+    - "-3%~0"
+    - "-5%~-3%"
+    - "-7%~-5%"
+    - "<-7%"

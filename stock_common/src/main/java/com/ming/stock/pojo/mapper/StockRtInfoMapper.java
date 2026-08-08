@@ -34,5 +34,5 @@ public interface StockRtInfoMapper {
 
     List<Map> getStockUpDownCount(@Param("startDate")Date startDate,
                                   @Param("endDate")Date EndDate,@Param("flag") Integer flag);
-
+    List<Map> getIncreaseRangeInfoByDate(@Param("curTime") Date curTime);
 }
