@@ -25,4 +25,5 @@ public interface StockService {
     R<Map<String,List>> getComparedStockTradeAmt();
     R<Map> getIncreaseRangeInfoByDate();
     R<List<Stock4MinuteDomain>> getStockScreenTimeSharing(String stockCode);
+    R<List<Stock4MinuteDomain>> getStock4DkLine(String stockCode);
 }

@@ -76,5 +76,10 @@ public class StockController {
     getStockScreenTimeSharing(@RequestParam(value = "code",required = true) String stockCode){
         return stockService.getStockScreenTimeSharing(stockCode);
     }
+    @RequestMapping("/stock/screen/dkline")
+    public R<List<Stock4MinuteDomain>> getStockScreenDkLine(@RequestParam(value
+            = "code",required = true) String stockCode){
+        return stockService.getStock4DkLine(stockCode);
+    }
 
 }

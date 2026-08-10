@@ -191,6 +191,22 @@ public class StockServiceImpl implements StockService {
         List<Stock4MinuteDomain> data = stockRtInfoMapper.getStock4MinuteInfo(startDate,endDate,stockCode);
         return R.ok(data);
     }
+
+    @Override
+    public R<List<Stock4MinuteDomain>> getStock4DkLine(String stockCode) {
+        DateTime endDateTime = DateTime.parse("2023-6-7 14:30:00",DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
+        Date endDate = endDateTime.toDate();
+        DateTime startDateTime = DateTime.parse("2022-12-30 9:30:00",DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
+        Date startDate = startDateTime.toDate();
+        List<Stock4MinuteDomain> dkLineData = stockRtInfoMapper.getStock4DkLine(startDate,endDate,stockCode);
+        return R.ok(dkLineData);
+
+
+
+
+
+    }
+
 }
 
 

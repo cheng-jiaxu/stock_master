@@ -38,4 +38,7 @@ public interface StockRtInfoMapper {
     List<Map> getIncreaseRangeInfoByDate(@Param("curTime") Date curTime);
 
     List<Stock4MinuteDomain> getStock4MinuteInfo(@Param("startDate") Date startDate,@Param("endDate") Date endDate,@Param("stockCode") String stockCode);
+
+    List<Stock4MinuteDomain> getStock4DkLine(@Param("startDate") Date startDate,
+                                             @Param("endDate") Date endDate, @Param("stockCode") String stockCode);
 }
