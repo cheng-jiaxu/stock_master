@@ -1,5 +1,6 @@
 package com.ming.stock.pojo.mapper;
 
+import com.ming.stock.domain.Stock4MinuteDomain;
 import com.ming.stock.domain.StockUpdownDomain;
 import com.ming.stock.pojo.entity.StockRtInfo;
 import org.apache.ibatis.annotations.Param;
@@ -35,4 +36,6 @@ public interface StockRtInfoMapper {
     List<Map> getStockUpDownCount(@Param("startDate")Date startDate,
                                   @Param("endDate")Date EndDate,@Param("flag") Integer flag);
     List<Map> getIncreaseRangeInfoByDate(@Param("curTime") Date curTime);
+
+    List<Stock4MinuteDomain> getStock4MinuteInfo(@Param("startDate") Date startDate,@Param("endDate") Date endDate,@Param("stockCode") String stockCode);
 }

@@ -1,12 +1,15 @@
 package com.ming.stock.controller;
 
 import com.ming.stock.domain.InnerMarketDomain;
+import com.ming.stock.domain.Stock4MinuteDomain;
 import com.ming.stock.domain.StockBlockDomain;
 import com.ming.stock.domain.StockUpdownDomain;
 import com.ming.stock.service.StockService;
 import com.ming.stock.vo.resp.PageResult;
 import com.ming.stock.vo.resp.R;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,4 +69,12 @@ public class StockController {
     public R<Map> getIncreaseRangeInfo(){
         return stockService.getIncreaseRangeInfoByDate();
     }
+    @Parameter(name = "stockCode", description = "股票编码", in = ParameterIn.QUERY, required = true)
+    @Operation(summary = "功能描述：查询单个个股的分时行情数据，也就是统计指定股票T日每分钟 的交易数据；如果当前日期不在有效时间内，则以最近的一个股票交易时间作为查询时间点 总结:获取指定股票T日分时数据", description = "功能描述：查询单个个股的分时行情数据，也就 是统计指定股票T日每分钟的交易数据；        如果当前日期不在有效时间内，则以最近的一个股票交易时间作为查询时间点   总结:获取指定股票T日分时数据")
+    @GetMapping("/stock/screen/time-sharing")
+    public R<List<Stock4MinuteDomain>>
+    getStockScreenTimeSharing(@RequestParam(value = "code",required = true) String stockCode){
+        return stockService.getStockScreenTimeSharing(stockCode);
+    }
+
 }

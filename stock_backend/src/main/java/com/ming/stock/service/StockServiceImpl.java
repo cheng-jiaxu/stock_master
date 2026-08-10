@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ming.stock.domain.InnerMarketDomain;
+import com.ming.stock.domain.Stock4MinuteDomain;
 import com.ming.stock.domain.StockBlockDomain;
 import com.ming.stock.domain.StockUpdownDomain;
 import com.ming.stock.pojo.mapper.StockBlockRtInfoMapper;
@@ -181,6 +182,15 @@ public class StockServiceImpl implements StockService {
         data.put("infos",allInfos);
         return R.ok(data);
         }
+
+    @Override
+    public R<List<Stock4MinuteDomain>> getStockScreenTimeSharing(String stockCode) {
+        DateTime endDateTime = DateTime.parse("2022-12-30 14:30:00",DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
+        Date endDate = endDateTime.toDate();
+        Date startDate = DateTimeUtil.getOpenDate(endDateTime).toDate();
+        List<Stock4MinuteDomain> data = stockRtInfoMapper.getStock4MinuteInfo(startDate,endDate,stockCode);
+        return R.ok(data);
     }
+}
 
 

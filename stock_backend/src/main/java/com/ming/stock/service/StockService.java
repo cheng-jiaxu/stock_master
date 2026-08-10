@@ -1,6 +1,7 @@
 package com.ming.stock.service;
 
 import com.ming.stock.domain.InnerMarketDomain;
+import com.ming.stock.domain.Stock4MinuteDomain;
 import com.ming.stock.domain.StockBlockDomain;
 import com.ming.stock.domain.StockUpdownDomain;
 import com.ming.stock.vo.resp.PageResult;
@@ -23,4 +24,5 @@ public interface StockService {
     void exportStockUpdownInfo(Integer Page, Integer PageSize, HttpServletResponse response);
     R<Map<String,List>> getComparedStockTradeAmt();
     R<Map> getIncreaseRangeInfoByDate();
+    R<List<Stock4MinuteDomain>> getStockScreenTimeSharing(String stockCode);
 }
