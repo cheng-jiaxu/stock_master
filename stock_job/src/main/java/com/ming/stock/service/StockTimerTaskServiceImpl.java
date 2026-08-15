@@ -1,10 +1,16 @@
 package com.ming.stock.service;
 
 import cn.hutool.core.util.StrUtil;
+import com.google.common.collect.Lists;
 import com.ming.stock.pojo.entity.StockMarketIndexInfo;
+import com.ming.stock.pojo.entity.StockRtInfo;
+import com.ming.stock.pojo.mapper.StockBusinessMapper;
 import com.ming.stock.pojo.mapper.StockMarketIndexInfoMapper;
+import com.ming.stock.pojo.mapper.StockRtInfoMapper;
 import com.ming.stock.utils.DateTimeUtil;
 import com.ming.stock.utils.IdWorker;
+import com.ming.stock.utils.ParseType;
+import com.ming.stock.utils.ParserStockInfoUtil;
 import com.ming.stock.vo.StockInfoConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +23,10 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -31,6 +39,14 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
         private IdWorker idWorker;
         @Autowired
         private StockMarketIndexInfoMapper stockMarketIndexInfoMapper;
+
+        @Autowired
+        private StockBusinessMapper stockBusinessMapper;
+
+        @Autowired
+        private ParserStockInfoUtil parserStockInfoUtil;
+    @Autowired
+    private StockRtInfoMapper stockRtInfoMapper;
 
     @Override
     public void getInnerMarketInfo() {
@@ -93,5 +109,25 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
         int count = this.stockMarketIndexInfoMapper.insertBatch(infos);
         log.info("插入了{}条数据",count);
     }
+
+    @Override
+    public void getStockRtIndex() {
+        List<String> stockIds = stockBusinessMapper.getStockIds();
+        stockIds = stockIds.stream().map(id ->{
+            return id.startsWith("6") ? "sh" + id : "sz" +id;
+        }).collect(Collectors.toList());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Referer","https://finance.sina.com.cn/stock/");
+        httpHeaders.add("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64)" +
+                "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36");
+        HttpEntity<Object> entity = new HttpEntity<>(httpHeaders);
+        Lists.partition(stockIds,20).forEach(list ->{
+            String stockUrl=stockInfoConfig.getMarketUrl()+String.join(",",list);
+            String result = restTemplate.postForObject(stockUrl,entity,String.class);
+            List<StockRtInfo> infos = parserStockInfoUtil.parser4StockOrMarketInfo(result, ParseType.ASHARE);
+            log.info("数据量: {}",infos.size());
+            stockRtInfoMapper.insertBatch(infos);
+        });
     }
+}
 

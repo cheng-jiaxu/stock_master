@@ -41,4 +41,5 @@ public interface StockRtInfoMapper {
 
     List<Stock4MinuteDomain> getStock4DkLine(@Param("startDate") Date startDate,
                                              @Param("endDate") Date endDate, @Param("stockCode") String stockCode);
+    int insertBatch(@Param("list") List<StockRtInfo> list);
 }

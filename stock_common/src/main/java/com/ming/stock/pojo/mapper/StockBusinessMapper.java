@@ -2,6 +2,8 @@ package com.ming.stock.pojo.mapper;
 
 import com.ming.stock.pojo.entity.StockBusiness;
 
+import java.util.List;
+
 /**
 * @author jingjing
 * @description 针对表【stock_business(主营业务表)】的数据库操作Mapper
@@ -21,5 +23,7 @@ public interface StockBusinessMapper {
     int updateByPrimaryKeySelective(StockBusiness record);
 
     int updateByPrimaryKey(StockBusiness record);
+
+    List<String> getStockIds();
 
 }
