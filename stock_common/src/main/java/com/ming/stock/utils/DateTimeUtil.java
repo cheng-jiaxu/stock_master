@@ -70,7 +70,7 @@ public class DateTimeUtil {
      */
     public static DateTime getCloseDate(DateTime dateTime){
         return
-                dateTime.withHourOfDay(14).withMinuteOfHour(58).withSecondOfMinute(0).withMillisOfSecond(0);
+                dateTime.withHourOfDay(15).withMinuteOfHour(35).withSecondOfMinute(0).withMillisOfSecond(0);
     }
     /**
      * 获取指定日期的开盘日期
