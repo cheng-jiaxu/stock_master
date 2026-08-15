@@ -29,4 +29,5 @@ public interface StockBlockRtInfoMapper {
 
     List<StockBlockDomain> sectorAllLimit(@Param("timePoint") Date timePoint);
 
+    int insertBatch(@Param("list") List<StockBlockRtInfo> list);
 }

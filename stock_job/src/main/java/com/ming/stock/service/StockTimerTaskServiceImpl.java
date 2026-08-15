@@ -2,8 +2,10 @@ package com.ming.stock.service;
 
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Lists;
+import com.ming.stock.pojo.entity.StockBlockRtInfo;
 import com.ming.stock.pojo.entity.StockMarketIndexInfo;
 import com.ming.stock.pojo.entity.StockRtInfo;
+import com.ming.stock.pojo.mapper.StockBlockRtInfoMapper;
 import com.ming.stock.pojo.mapper.StockBusinessMapper;
 import com.ming.stock.pojo.mapper.StockMarketIndexInfoMapper;
 import com.ming.stock.pojo.mapper.StockRtInfoMapper;
@@ -47,6 +49,8 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
         private ParserStockInfoUtil parserStockInfoUtil;
     @Autowired
     private StockRtInfoMapper stockRtInfoMapper;
+    @Autowired
+    private StockBlockRtInfoMapper stockBlockRtInfoMapper;
 
     @Override
     public void getInnerMarketInfo() {
@@ -127,6 +131,15 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
             List<StockRtInfo> infos = parserStockInfoUtil.parser4StockOrMarketInfo(result, ParseType.ASHARE);
             log.info("数据量: {}",infos.size());
             stockRtInfoMapper.insertBatch(infos);
+        });
+    }
+
+    @Override
+    public void getStockSectorRtIndex() {
+        String result = restTemplate.getForObject(stockInfoConfig.getBlockUrl(),String.class);
+        List<StockBlockRtInfo> infos = parserStockInfoUtil.parse4StockBlock(result);
+        Lists.partition(infos,20).forEach(list -> {
+            stockBlockRtInfoMapper.insertBatch(list);
         });
     }
 }
