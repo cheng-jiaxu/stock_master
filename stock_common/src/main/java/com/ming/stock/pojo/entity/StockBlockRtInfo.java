@@ -1,14 +1,17 @@
 package com.ming.stock.pojo.entity;
 
+import lombok.Builder;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 股票板块详情信息表
  * @TableName stock_block_rt_info
  */
 @Data
+@Builder
 public class StockBlockRtInfo {
     /**
      * 板块主键ID（业务无关）
