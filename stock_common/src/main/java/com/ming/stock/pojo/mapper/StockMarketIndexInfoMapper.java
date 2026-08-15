@@ -32,4 +32,6 @@ public interface StockMarketIndexInfoMapper {
 
     List<Map> getSumAmtInfo(@Param("openDate") Date openDate,@Param("endDate") Date endDate,@Param("marketCodes") List<String> marketCodes);
 
+    int insertBatch(@Param("infos") List<StockMarketIndexInfo> infos);
+
 }

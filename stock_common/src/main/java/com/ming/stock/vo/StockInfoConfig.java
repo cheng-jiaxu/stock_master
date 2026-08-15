@@ -9,6 +9,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "stock")
 @Data
 public class StockInfoConfig {
+    //封装国内A股大盘编码合集
     private List<String> inner;
     private List<String> outer;
 

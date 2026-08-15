@@ -27,25 +27,31 @@
         select
         <include refid="Base_Column_List" />
         from stock_market_index_info
-        where  id = #{id} 
+        where  id = #{id}
     </select>
     <select id="getMarketInfo" resultType="com.ming.stock.domain.InnerMarketDomain">
-        select market_code as code,
-        market_name as name,
-        open_point as openPoint,
-        cur_point as curPoint,
-        cur_time-pre_close_point,
-        trade_amount as trade_Amt,
-        trade_volume as tradeVol,
-        cur_point-pre_close_point as upDown,
-        (cur_point-pre_close_point)/pre_close_point as rose,
-        (max_point-min_point)/pre_close_point as amplitude,
-        cur_time as curTime
-        from stock_market_index_info
-        where cur_time = #{curDate}
-        and market_code in
-        <foreach collection="marketCodes" item="mCode" open="(" separator=","
-        close = ")">
+        SELECT
+        sri2.market_code AS code,
+        sri2.market_name AS name,
+        sri2.open_point AS openPoint,
+        sri2.cur_point AS curPoint,
+        sri2.pre_close_point AS preClosePoint,
+        sri2.trade_amount AS tradeAmt,
+        sri2.trade_volume AS tradeVol,
+        (sri2.cur_point - sri2.pre_close_point) AS upDown,
+        (sri2.cur_point - sri2.pre_close_point) / sri2.pre_close_point AS rose,
+        (sri2.max_point - sri2.min_point) / sri2.pre_close_point AS amplitude,
+        sri2.cur_time AS curTime
+        FROM stock_market_index_info AS sri2
+        WHERE sri2.cur_time = (
+        -- 🌟 子查询：用 sri 查出小于等于 curDate 的【最新最大时间】，保证收盘后/周末依然能查出行情
+        SELECT MAX(sri.cur_time)
+        FROM stock_market_index_info AS sri
+        WHERE sri.market_code = sri2.market_code
+        AND sri.cur_time &lt;= #{curDate}
+        )
+        AND sri2.market_code IN
+        <foreach collection="marketCodes" item="mCode" open="(" separator="," close=")">
             #{mCode}
         </foreach>
     </select>
@@ -103,6 +109,17 @@
                 <if test="tradeVolume != null">#{tradeVolume},</if>
                 <if test="curTime != null">#{curTime},</if>
         </trim>
+    </insert>
+    <insert id="insertBatch">
+        insert into stock_market_index_info
+        (id,market_code,market_name,pre_close_point,open_point,
+        cur_point,min_point,max_point,trade_amount,trade_volume,cur_time)
+        values
+            <foreach collection="infos" item="info" separator=",">
+                (#{info.id,jdbcType=BIGINT},#{info.marketCode,jdbcType=CHAR},#{info.marketName,jdbcType=CHAR},#{info.preClosePoint,jdbcType=DECIMAL}
+                ,#{info.openPoint,jdbcType=DECIMAL},#{info.curPoint,jdbcType=DECIMAL},#{info.minPoint,jdbcType=DECIMAL},#{info.maxPoint,jdbcType=DECIMAL}
+                ,#{info.tradeAmount,jdbcType=BIGINT},#{info.tradeVolume,jdbcType=DECIMAL},#{info.curTime,jdbcType=TIMESTAMP})
+            </foreach>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.ming.stock.pojo.entity.StockMarketIndexInfo">
         update stock_market_index_info
