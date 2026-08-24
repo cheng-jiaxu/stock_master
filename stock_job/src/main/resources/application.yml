@@ -11,6 +11,12 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+  rabbitmq:
+    host: 172.16.39.131
+    port: 5672
+    virtual-host: /
+    username: admin
+    password: admin123
 mybatis:
   type-aliases-package: com.ming.stock.pojo.entity
   mapper-locations: classpath:mapper/*.xml
