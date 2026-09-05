@@ -7,7 +7,12 @@ spring:
       dev:
         - cache
         - stock
-
+  rabbitmq:
+    port: 5672
+    host: 172.39.16.131
+    virtual-host: /
+    username: admin
+    password: admin123
   datasource:
     url: jdbc:mysql://172.16.39.131:3306/stock_db?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: root
