@@ -15,6 +15,7 @@ import com.ming.stock.utils.ParseType;
 import com.ming.stock.utils.ParserStockInfoUtil;
 import com.ming.stock.vo.StockInfoConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -51,6 +52,8 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
     private StockRtInfoMapper stockRtInfoMapper;
     @Autowired
     private StockBlockRtInfoMapper stockBlockRtInfoMapper;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Override
     public void getInnerMarketInfo() {
@@ -112,6 +115,7 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
         }
         int count = this.stockMarketIndexInfoMapper.insertBatch(infos);
         log.info("插入了{}条数据",count);
+        rabbitTemplate.convertAndSend("stockExchange","inner.market",new Date());
     }
 
     @Override
