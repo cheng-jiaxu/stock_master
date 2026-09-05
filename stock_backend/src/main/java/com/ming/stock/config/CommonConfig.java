@@ -1,11 +1,16 @@
 package com.ming.stock.config;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.ming.stock.utils.IdWorker;
 import com.ming.stock.vo.StockInfoConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.concurrent.TimeUnit;
+
 
 /**
  * @Description: 配置公共类
@@ -36,4 +41,18 @@ public class CommonConfig {
         return new StockInfoConfig();
     }
 
+    /**
+     * 构建缓存bean
+     * @return
+     */
+    @Bean
+    public Cache<String,Object> caffeineCache(){
+        Cache<String,Object> cache = Caffeine.newBuilder()
+                .maximumSize(200)
+                .expireAfterAccess(1, TimeUnit.SECONDS)
+                .expireAfterWrite(1,TimeUnit.SECONDS)
+                .initialCapacity(100)
+                .recordStats().build();
+        return cache;
+    }
 }
