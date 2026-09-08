@@ -12,3 +12,18 @@ stock:
     - b_FSSTI # 新加坡
   marketUrl: https://hq.sinajs.cn/list=
   blockUrl: http://vip.stock.finance.sina.com.cn/q/view/newSinaHy.php
+xxl:
+  job:
+    admin:
+      addresses: http://172.16.39.131:8093/
+      accessToken: default_token
+      timeout: 3
+    executor:
+      enabled: true
+      appname: stock-job-executor
+      address:
+      ip: 172.16.39.1
+      port: 9999
+      logpath: .\logs
+      logretentiondays: 30
+      excludedpackage:
