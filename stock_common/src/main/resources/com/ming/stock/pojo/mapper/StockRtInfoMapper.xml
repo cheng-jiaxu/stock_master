@@ -184,6 +184,15 @@
         #{si.tradeVolume, jdbcType=DECIMAL},
         #{si.curTime, jdbcType=TIMESTAMP})
     </foreach>
+        ON DUPLICATE KEY UPDATE
+        stock_name = VALUES(stock_name),
+        pre_close_price = VALUES(pre_close_price),
+        open_price = VALUES(open_price),
+        cur_price = VALUES(cur_price),
+        min_price = VALUES(min_price),
+        max_price = VALUES(max_price),
+        trade_amount = VALUES(trade_amount),
+        trade_volume = VALUES(trade_volume)
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.ming.stock.pojo.entity.StockRtInfo">
         update stock_rt_info
