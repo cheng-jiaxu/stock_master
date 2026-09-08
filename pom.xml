@@ -34,7 +34,7 @@
         <sharding-jdbc.version>5.3.1</sharding-jdbc.version>
         <jjwt.version>0.11.5</jjwt.version>
         <easyExcel.version>3.3.4</easyExcel.version>
-        <xxl-job-core.version>2.3.1</xxl-job-core.version>
+        <xxl-job-core.version>3.4.2</xxl-job-core.version>
         <joda-time.version>2.12.2</joda-time.version>
         <google.guava.version>31.1-jre</google.guava.version>
         <knif4j.version>4.5.0</knif4j.version>
