@@ -35,8 +35,8 @@ public class StockBlockDomain {
     private String name;
 
     @Schema(description = "当前日期")
-    @JsonFormat(pattern = "yy-MM-dd HH:mm")
-    private Date curTime;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date curDate;
 
     @Schema(description = "交易总金额")
     private BigDecimal tradeVol;
