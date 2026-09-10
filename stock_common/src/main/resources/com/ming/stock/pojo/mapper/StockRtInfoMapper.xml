@@ -44,21 +44,30 @@
         where cur_time = #{curDate}
         order by upDown desc
     </select>
-    <select id="getTopStocksByIncrease" resultType="com.ming.stock.domain.StockUpdownDomain">
-        select sri.trade_amount as tradeAmt,
-        sri.stock_code as code,
-        sri.stock_name as name,
-        sri.trade_volume as tradeVol,
-        (sri.cur_price-sri.pre_close_price)/sri.pre_close_price as increase,
-        (sri.cur_price-sri.pre_close_price) as upDown,
-        (sri.max_price-sri.min_price)/sri.pre_close_price as amplitude,
-        sri.cur_price as tradePrice,
-        sri.pre_close_price as preClosePrice,
-        sri.cur_time as curDate
-        from stock_rt_info as sri
-        where cur_time = #{curDate}
-        order by upDown desc
-        limit 4
+    <select id="getTopStocksByIncrease"
+            resultType="com.ming.stock.domain.StockUpdownDomain">
+        SELECT
+        sri.trade_amount AS tradeAmt,
+        sri.stock_code AS code,
+        sri.stock_name AS name,
+        sri.trade_volume AS tradeVol,
+        (sri.cur_price - sri.pre_close_price)
+        / sri.pre_close_price AS increase,
+        (sri.cur_price - sri.pre_close_price) AS upDown,
+        (sri.max_price - sri.min_price)
+        / sri.pre_close_price AS amplitude,
+        sri.cur_price AS tradePrice,
+        sri.pre_close_price AS preClosePrice,
+        DATE_FORMAT(sri.cur_time, '%Y-%m-%d') AS curDate
+        FROM stock_rt_info AS sri
+        WHERE sri.cur_time = (
+        SELECT MAX(t.cur_time)
+        FROM stock_rt_info AS t
+        WHERE t.cur_time >= DATE(#{curDate})
+        AND t.cur_time &lt; #{curDate}
+        )
+        ORDER BY increase DESC
+        LIMIT 4
     </select>
     <select id="getStockUpDownCount" resultType="java.util.Map">
         SELECT
