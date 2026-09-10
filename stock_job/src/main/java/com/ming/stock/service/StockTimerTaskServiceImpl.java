@@ -18,6 +18,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
@@ -53,6 +54,8 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
     private StockBlockRtInfoMapper stockBlockRtInfoMapper;
     @Autowired
     private RabbitTemplate rabbitTemplate;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Override
     public void getInnerMarketInfo() {
@@ -131,12 +134,14 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
         httpHeaders.add("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64)" +
                 "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36");
         HttpEntity<Object> entity = new HttpEntity<>(httpHeaders);
-        Lists.partition(stockIds,20).forEach(list ->{
-            String stockUrl=stockInfoConfig.getMarketUrl()+String.join(",",list);
-            String result = restTemplate.postForObject(stockUrl,entity,String.class);
-            List<StockRtInfo> infos = parserStockInfoUtil.parser4StockOrMarketInfo(result, ParseType.ASHARE);
-            log.info("数据量: {}",infos.size());
-            stockRtInfoMapper.insertBatch(infos);
+        Lists.partition(stockIds,20).forEach(ids ->{
+            threadPoolTaskExecutor.execute(()->{
+                String stockUrl=stockInfoConfig.getMarketUrl()+String.join(",",ids);
+                String result = restTemplate.postForObject(stockUrl,entity,String.class);
+                List<StockRtInfo> infos = parserStockInfoUtil.parser4StockOrMarketInfo(result, ParseType.ASHARE);
+                log.info("数据量: {}",infos.size());
+                stockRtInfoMapper.insertBatch(infos);});
+
         });
     }
 
