@@ -33,13 +33,14 @@
         sbr.label as code,
         sbr.avg_price as avgPrice,
         sbr.block_name as name,
-        sbr.cur_time as curTime,
+        sbr.cur_time as curDate,
         sbr.trade_volume as tradeVol,
         sbr.updown_rate as updownRate
         from stock_block_rt_info as sbr
-        where sbr.cur_time = #{timePoint}
+        where sbr.cur_time = (select MAX(t.cur_time) from stock_block_rt_info as t
+        where t.cur_time >= DATE(#{curDate})  AND t.cur_time &lt;
+        DATE_ADD(DATE(#{curDate}), INTERVAL 1 DAY))
         order by sbr.trade_volume desc limit 10
-
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
