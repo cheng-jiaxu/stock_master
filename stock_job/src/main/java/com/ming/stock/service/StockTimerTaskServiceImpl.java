@@ -1,6 +1,5 @@
 package com.ming.stock.service;
 
-import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Lists;
 import com.ming.stock.pojo.entity.StockBlockRtInfo;
 import com.ming.stock.pojo.entity.StockMarketIndexInfo;
@@ -83,15 +82,18 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
             BigDecimal maxPoint = new BigDecimal(splitArr[4]);
             BigDecimal minPoint = new BigDecimal(splitArr[5]);
             Long tradeAmt = 0L;
-            if (splitArr.length > 6 && StrUtil.isNotBlank(splitArr[6])) {
+            BigDecimal tradeVol = BigDecimal.ZERO;
+
+            if (splitArr.length > 9) {
                 try {
-                    // 使用 BigDecimal 转 Long，可以兼容 "0"、"0.00" 或科学计数法形式的字符串
-                    tradeAmt = new BigDecimal(splitArr[6].trim()).longValue();
+                    // 8：成交量；9：成交额
+                    tradeVol = new BigDecimal(splitArr[8].trim());
+                    tradeAmt = new BigDecimal(splitArr[9].trim()).longValue();
                 } catch (Exception e) {
-                    tradeAmt = 0L; // 解析失败安全兜底为 0L
+                    log.warn("解析大盘成交量/成交额失败，marketCode={}, 原始数据={}",
+                            marketCode, otherInfo, e);
                 }
             }
-            BigDecimal tradeVol = new BigDecimal(splitArr[7]);
             Date curTime = DateTimeUtil.getDateTimeWithoutSecond(splitArr[30] + " " + splitArr[31]).toDate();
             //组装entity对象
             StockMarketIndexInfo info = StockMarketIndexInfo.builder().id(idWorker.nextId())
