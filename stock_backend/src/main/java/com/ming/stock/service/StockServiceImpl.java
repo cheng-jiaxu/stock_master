@@ -19,11 +19,9 @@ import com.ming.stock.vo.resp.ResponseCode;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -63,18 +61,16 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public R<List<StockBlockDomain>> sectorAllLimit() {
-        Date timePoint = DateTime.parse("2022-12-21 09:30:00",
-                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+        Date timePoint = DateTimeUtil.getLastDate4Stock(DateTime.now()).toDate();
         List<StockBlockDomain> data = stockBlockRtInfoMapper.sectorAllLimit(timePoint);
         return R.ok(data);
     }
 
     @Override
     public R<PageResult<StockUpdownDomain>> getStockInfoByPage(Integer Page, Integer PageSize) {
-        Date timePoint = DateTime.parse("2022-12-30 09:32:00",
-                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+        Date curDate = DateTimeUtil.getLastDate4Stock(DateTime.now()).toDate();
         PageHelper.startPage(Page,PageSize);
-        List<StockUpdownDomain> data = stockRtInfoMapper.getStockInfoByTime(timePoint);
+        List<StockUpdownDomain> data = stockRtInfoMapper.getStockInfoByTime(curDate);
         PageInfo<StockUpdownDomain> pageInfo = new PageInfo<>(data);
         PageResult<StockUpdownDomain> pageResult = new PageResult<>(pageInfo);
          return R.ok(pageResult);
@@ -82,16 +78,14 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public R<List<StockUpdownDomain>> getTopStocksByIncrease() {
-        Date timePoint = DateTime.parse("2022-12-30 09:32:00",
-                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
-        List<StockUpdownDomain> data = stockRtInfoMapper.getTopStocksByIncrease(timePoint);
+        Date curDate = DateTimeUtil.getLastDate4Stock(DateTime.now()).toDate();
+        List<StockUpdownDomain> data = stockRtInfoMapper.getTopStocksByIncrease(curDate);
         return R.ok(data);
     }
 
     @Override
     public R<Map<String, List>> getStockUpDownCount() {
-        DateTime curDateTime = DateTime.parse("2023-01-06 14:25:00",
-                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
+        DateTime curDateTime = DateTimeUtil.getLastDate4Stock(DateTime.now());
         Date endDate = curDateTime.toDate();
         Date startDate = DateTimeUtil.getOpenDate(curDateTime).toDate();
         List<Map> uplist = stockRtInfoMapper.getStockUpDownCount(startDate,endDate,1);
@@ -108,8 +102,7 @@ public class StockServiceImpl implements StockService {
             //1.获取最近最新的一次股票有效交易时间点（精确分钟）
 
             //在数据库中是没有的，所以，先临时指定一个假数据,后续注释掉该代码即可
-            Date curDate=DateTime.parse("2022-12-31 09:47:00",
-                    DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate();
+            Date curDate = DateTimeUtil.getLastDate4Stock(DateTime.now()).toDate();
             //2.设置分页参数 底层会拦截mybatis发送的sql，并动态追加limit语句实现分页
             PageHelper.startPage(Page,PageSize);
             //3.查询
@@ -149,10 +142,9 @@ public class StockServiceImpl implements StockService {
     @Override
     public R<Map<String, List>> getComparedStockTradeAmt() {
         DateTime EndDateTime = DateTimeUtil.getLastDate4Stock(DateTime.now());
-        EndDateTime = DateTime.parse("2022-12-29 14:30:00",DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
         Date endDate = EndDateTime.toDate();
         Date startDate = DateTimeUtil.getOpenDate(EndDateTime).toDate();
-        DateTime preEndDateTime = DateTime.parse("2022-12-28 14:30:00",DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
+        DateTime preEndDateTime = DateTimeUtil.getLastDate4Stock(EndDateTime.minusDays(1));
         Date preEndDate = preEndDateTime.toDate();
         Date preStartDate = DateTimeUtil.getOpenDate(preEndDateTime).toDate();
         List<Map> preData = stockMarketIndexInfoMapper.getSumAmtInfo(preStartDate,preEndDate,stockInfoConfig.getInner());
@@ -165,7 +157,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public R<Map> getIncreaseRangeInfoByDate() {
-        DateTime curDateTime = DateTime.parse("2022-12-30 09:32:00",DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
+        DateTime curDateTime = DateTimeUtil.getLastDate4Stock(DateTime.now());
         Date curDate = curDateTime.toDate();
         List<Map> infos = stockRtInfoMapper.getIncreaseRangeInfoByDate(curDate);
         List<String> upDownRage = stockInfoConfig.getUpDownRange();
@@ -188,7 +180,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public R<List<Stock4MinuteDomain>> getStockScreenTimeSharing(String stockCode) {
-        DateTime endDateTime = DateTime.parse("2022-12-30 14:30:00",DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
+        DateTime endDateTime = DateTimeUtil.getLastDate4Stock(DateTime.now());
         Date endDate = endDateTime.toDate();
         Date startDate = DateTimeUtil.getOpenDate(endDateTime).toDate();
         List<Stock4MinuteDomain> data = stockRtInfoMapper.getStock4MinuteInfo(startDate,endDate,stockCode);
@@ -197,9 +189,9 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public R<List<Stock4MinuteDomain>> getStock4DkLine(String stockCode) {
-        DateTime endDateTime = DateTime.parse("2023-6-7 14:30:00",DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
+        DateTime endDateTime = DateTimeUtil.getLastDate4Stock(DateTime.now());
         Date endDate = endDateTime.toDate();
-        DateTime startDateTime = DateTime.parse("2022-12-30 9:30:00",DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
+        DateTime startDateTime = DateTimeUtil.getOpenDate(endDateTime);
         Date startDate = startDateTime.toDate();
         List<Stock4MinuteDomain> dkLineData = stockRtInfoMapper.getStock4DkLine(startDate,endDate,stockCode);
         return R.ok(dkLineData);
