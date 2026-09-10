@@ -49,8 +49,8 @@ public class StockUpdownDomain {
     @Schema(description = "前收盘价")
     private BigDecimal preClosePrice;
     @ExcelProperty(value ={"股票涨幅信息统计表","当前日期"} ,index =9 )
-    @DateTimeFormat("yyyy-MM-DD HH:mm")
-    @JsonFormat(pattern = "yyyy-MM-DD HH:mm")
+    @DateTimeFormat("yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Schema(description = "当前日期")
     private Date curDate;
 }
