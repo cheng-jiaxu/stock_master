@@ -27,7 +27,7 @@ public interface StockBlockRtInfoMapper {
 
     int updateByPrimaryKey(StockBlockRtInfo record);
 
-    List<StockBlockDomain> sectorAllLimit(@Param("timePoint") Date timePoint);
+    List<StockBlockDomain> sectorAllLimit(@Param("curDate") Date timePoint);
 
     int insertBatch(@Param("list") List<StockBlockRtInfo> list);
 }
