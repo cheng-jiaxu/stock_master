@@ -60,7 +60,12 @@
         date_format(cur_time,'%Y%m%d%H%i') as time,
         sum(trade_amount) as count
         from  stock_market_index_info
-        where cur_time between #{openDate} and #{endDate}
+        where cur_time between #{openDate} and (
+            select MAX(t.cur_time)
+            from stock_market_index_info as t
+            where t.cur_time >= DATE(#{endDate})
+            and t.cur_time &lt;= #{endDate}
+        )
         and market_code in
         <foreach collection="marketCodes" item="mCode" open="("
                  separator="," close=")">
