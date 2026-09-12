@@ -27,5 +27,9 @@ public class StockJob {
     public void getStockBlockInfoTask() {
         stockTimerTaskService.getStockSectorRtIndex();
     }
+    @XxlJob(("getOuterMarketInfo"))
+    public void getOuterMarketInfo(){
+        stockTimerTaskService.getOuterMarketInfo();
+    }
 
     }

@@ -7,4 +7,6 @@ public interface StockTimerTaskService {
     void getStockRtIndex();
 
     void getStockSectorRtIndex();
+
+    void getOuterMarketInfo();
 }

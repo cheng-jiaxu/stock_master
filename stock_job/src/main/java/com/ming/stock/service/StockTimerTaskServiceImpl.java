@@ -3,11 +3,9 @@ package com.ming.stock.service;
 import com.google.common.collect.Lists;
 import com.ming.stock.pojo.entity.StockBlockRtInfo;
 import com.ming.stock.pojo.entity.StockMarketIndexInfo;
+import com.ming.stock.pojo.entity.StockOuterMarketIndexInfo;
 import com.ming.stock.pojo.entity.StockRtInfo;
-import com.ming.stock.pojo.mapper.StockBlockRtInfoMapper;
-import com.ming.stock.pojo.mapper.StockBusinessMapper;
-import com.ming.stock.pojo.mapper.StockMarketIndexInfoMapper;
-import com.ming.stock.pojo.mapper.StockRtInfoMapper;
+import com.ming.stock.pojo.mapper.*;
 import com.ming.stock.utils.DateTimeUtil;
 import com.ming.stock.utils.IdWorker;
 import com.ming.stock.utils.ParseType;
@@ -56,6 +54,8 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
     private RabbitTemplate rabbitTemplate;
     @Autowired
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+    @Autowired
+    private StockOuterMarketIndexInfoMapper stockOuterMarketIndexInfoMapper;
 
     @Override
     public void getInnerMarketInfo() {
@@ -152,6 +152,28 @@ public class StockTimerTaskServiceImpl implements StockTimerTaskService {
         Lists.partition(infos,20).forEach(list -> {
             stockBlockRtInfoMapper.insertBatch(list);
         });
+    }
+
+    @Override
+    public void getOuterMarketInfo() {
+        String url = stockInfoConfig.getMarketUrl()
+                + String.join(",", stockInfoConfig.getOuter());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Referer","https://finance.sina.com.cn/stock/");
+        headers.add("User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; WOW64) "
+                        + "AppleWebKit/537.36 (KHTML, like Gecko) "
+                        + "Chrome/72.0.3626.121 Safari/537.36");
+        HttpEntity<Object> entity = new HttpEntity<>(headers);
+        String result = restTemplate.postForObject(url,entity,String.class);
+        List<StockOuterMarketIndexInfo> infos = parserStockInfoUtil.parser4StockOrMarketInfo(result,ParseType.OUTER);
+        if(CollectionUtils.isEmpty(infos)){
+            log.warn("未采集到外盘数据");
+            return;
+        }
+        int count = stockOuterMarketIndexInfoMapper.insertBatch(infos);
+        log.info("成功写入 {} 条外盘行情数据", count);
+
     }
 }
 
