@@ -1,9 +1,6 @@
 package com.ming.stock.controller;
 
-import com.ming.stock.domain.InnerMarketDomain;
-import com.ming.stock.domain.Stock4MinuteDomain;
-import com.ming.stock.domain.StockBlockDomain;
-import com.ming.stock.domain.StockUpdownDomain;
+import com.ming.stock.domain.*;
 import com.ming.stock.service.StockService;
 import com.ming.stock.vo.resp.PageResult;
 import com.ming.stock.vo.resp.R;
@@ -80,6 +77,10 @@ public class StockController {
     public R<List<Stock4MinuteDomain>> getStockScreenDkLine(@RequestParam(value
             = "code",required = true) String stockCode){
         return stockService.getStock4DkLine(stockCode);
+    }
+    @RequestMapping("/external/index")
+    public R<List<OuterMarketDomain>> getOuterMarketInfo(){
+       return stockService.getOuterMarketInfo();
     }
 
 }

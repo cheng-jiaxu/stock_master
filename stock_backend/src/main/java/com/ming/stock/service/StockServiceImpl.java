@@ -4,12 +4,10 @@ import com.alibaba.excel.EasyExcel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.ming.stock.domain.InnerMarketDomain;
-import com.ming.stock.domain.Stock4MinuteDomain;
-import com.ming.stock.domain.StockBlockDomain;
-import com.ming.stock.domain.StockUpdownDomain;
+import com.ming.stock.domain.*;
 import com.ming.stock.pojo.mapper.StockBlockRtInfoMapper;
 import com.ming.stock.pojo.mapper.StockMarketIndexInfoMapper;
+import com.ming.stock.pojo.mapper.StockOuterMarketIndexInfoMapper;
 import com.ming.stock.pojo.mapper.StockRtInfoMapper;
 import com.ming.stock.utils.DateTimeUtil;
 import com.ming.stock.vo.StockInfoConfig;
@@ -39,6 +37,8 @@ public class StockServiceImpl implements StockService {
     private StockBlockRtInfoMapper stockBlockRtInfoMapper;
     @Autowired
     private StockRtInfoMapper stockRtInfoMapper;
+    @Autowired
+    private StockOuterMarketIndexInfoMapper stockOuterMarketIndexInfoMapper;
 
 
     @Override
@@ -195,13 +195,15 @@ public class StockServiceImpl implements StockService {
         Date startDate = startDateTime.toDate();
         List<Stock4MinuteDomain> dkLineData = stockRtInfoMapper.getStock4DkLine(startDate,endDate,stockCode);
         return R.ok(dkLineData);
-
-
-
-
-
     }
 
+    @Override
+    public R<List<OuterMarketDomain>> getOuterMarketInfo() {
+        Date curDate = DateTime.now().toDate();
+        List<String> mCodes = stockInfoConfig.getOuter();
+        List<OuterMarketDomain> data = stockOuterMarketIndexInfoMapper.getOuterMarketInfo(curDate,mCodes);
+        return R.ok(data);
+    }
 }
 
 

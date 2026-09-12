@@ -1,9 +1,6 @@
 package com.ming.stock.service;
 
-import com.ming.stock.domain.InnerMarketDomain;
-import com.ming.stock.domain.Stock4MinuteDomain;
-import com.ming.stock.domain.StockBlockDomain;
-import com.ming.stock.domain.StockUpdownDomain;
+import com.ming.stock.domain.*;
 import com.ming.stock.vo.resp.PageResult;
 import com.ming.stock.vo.resp.R;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,4 +23,5 @@ public interface StockService {
     R<Map> getIncreaseRangeInfoByDate();
     R<List<Stock4MinuteDomain>> getStockScreenTimeSharing(String stockCode);
     R<List<Stock4MinuteDomain>> getStock4DkLine(String stockCode);
+    R<List<OuterMarketDomain>> getOuterMarketInfo();
 }
