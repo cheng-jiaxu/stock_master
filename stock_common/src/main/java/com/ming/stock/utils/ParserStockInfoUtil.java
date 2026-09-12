@@ -133,6 +133,7 @@ public class ParserStockInfoUtil {
         StockOuterMarketIndexInfo smi = StockOuterMarketIndexInfo.builder()
                 .id(idWorker.nextId())
                 .marketCode(marketCode)
+                .marketName(marketName)
                 .curPoint(curPoint)
                 .updown(upDown)
                 .rose(rose)

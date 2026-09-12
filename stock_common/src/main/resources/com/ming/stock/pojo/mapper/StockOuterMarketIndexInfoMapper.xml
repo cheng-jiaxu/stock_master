@@ -25,6 +25,25 @@
         from stock_outer_market_index_info
         where  id = #{id} 
     </select>
+    <select id="getOuterMarketInfo" resultType="com.ming.stock.domain.OuterMarketDomain">
+        select
+        somi.market_code as code,
+        somi.market_name as name,
+        somi.cur_point as curPoint,
+        somi.updown as upDown,
+        somi.rose as rose,
+        somi.cur_time as curDate
+        from stock_outer_market_index_info as somi
+        where somi.cur_time = (
+        select MAX(t.cur_time)
+        from stock_outer_market_index_info as t
+        where t.market_code = somi.market_code
+        and t.cur_time &lt;= #{curDate}
+        ) and somi.market_code in
+        <foreach collection="mCode" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from stock_outer_market_index_info
@@ -57,6 +76,20 @@
                 <if test="rose != null">#{rose},</if>
                 <if test="curTime != null">#{curTime},</if>
         </trim>
+    </insert>
+    <insert id="insertBatch">
+        insert into stock_outer_market_index_info
+        (id, market_code, market_name, cur_point, updown, rose, cur_time)
+        values
+        <foreach collection="infos" item="info" separator=",">
+            (#{info.id,jdbcType=BIGINT},
+             #{info.marketCode,jdbcType=CHAR},
+             #{info.marketName,jdbcType=CHAR},
+             #{info.curPoint,jdbcType=DECIMAL},
+             #{info.updown,jdbcType=DECIMAL},
+             #{info.rose,jdbcType=DECIMAL},
+             #{info.curTime,jdbcType=TIMESTAMP})
+        </foreach>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.ming.stock.pojo.entity.StockOuterMarketIndexInfo">
         update stock_outer_market_index_info

@@ -1,6 +1,11 @@
 package com.ming.stock.pojo.mapper;
 
+import com.ming.stock.domain.OuterMarketDomain;
 import com.ming.stock.pojo.entity.StockOuterMarketIndexInfo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
+import java.util.List;
 
 /**
 * @author jingjing
@@ -21,5 +26,9 @@ public interface StockOuterMarketIndexInfoMapper {
     int updateByPrimaryKeySelective(StockOuterMarketIndexInfo record);
 
     int updateByPrimaryKey(StockOuterMarketIndexInfo record);
+
+    List<OuterMarketDomain> getOuterMarketInfo(@Param("curDate") Date curDate,@Param("mCode") List<String> mCode);
+
+    int insertBatch(@Param("infos") List<StockOuterMarketIndexInfo> infos);
 
 }
