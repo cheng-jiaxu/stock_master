@@ -1,5 +1,6 @@
 package com.ming;
 
+import com.ming.stock.pojo.mapper.StockBusinessMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class TestAll {
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private StockBusinessMapper stockBusinessMapper;
     /**
      * 测试密码加密
      */
@@ -23,4 +26,10 @@ public class TestAll {
         boolean flag = passwordEncoder.matches(pwd,"$2a$10$IWrigGynRJCeogQDcLMjLenXdssrQH.GNPqW..S807uhEEoMRkq5u");
         System.out.println(flag);
     }
+
+    @Test
+    public void test01(){
+        stockBusinessMapper.getStockIds();
+    }
+
 }
