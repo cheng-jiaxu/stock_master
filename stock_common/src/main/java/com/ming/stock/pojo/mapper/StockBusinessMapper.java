@@ -1,6 +1,8 @@
 package com.ming.stock.pojo.mapper;
 
+import com.ming.stock.domain.StockSearchDomain;
 import com.ming.stock.pojo.entity.StockBusiness;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -25,5 +27,9 @@ public interface StockBusinessMapper {
     int updateByPrimaryKey(StockBusiness record);
 
     List<String> getStockIds();
+
+    List<StockSearchDomain> searchStock(@Param("searchStr")String searchStr);
+
+
 
 }
