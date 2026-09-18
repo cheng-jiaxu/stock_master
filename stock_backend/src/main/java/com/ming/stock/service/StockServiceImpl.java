@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ming.stock.domain.*;
-import com.ming.stock.pojo.mapper.StockBlockRtInfoMapper;
-import com.ming.stock.pojo.mapper.StockMarketIndexInfoMapper;
-import com.ming.stock.pojo.mapper.StockOuterMarketIndexInfoMapper;
-import com.ming.stock.pojo.mapper.StockRtInfoMapper;
+import com.ming.stock.pojo.mapper.*;
 import com.ming.stock.utils.DateTimeUtil;
 import com.ming.stock.vo.StockInfoConfig;
 import com.ming.stock.vo.resp.PageResult;
@@ -39,6 +36,8 @@ public class StockServiceImpl implements StockService {
     private StockRtInfoMapper stockRtInfoMapper;
     @Autowired
     private StockOuterMarketIndexInfoMapper stockOuterMarketIndexInfoMapper;
+    @Autowired
+    private StockBusinessMapper stockBusinessMapper;
 
 
     @Override
@@ -195,6 +194,14 @@ public class StockServiceImpl implements StockService {
         Date startDate = startDateTime.toDate();
         List<Stock4MinuteDomain> dkLineData = stockRtInfoMapper.getStock4DkLine(startDate,endDate,stockCode);
         return R.ok(dkLineData);
+    }
+
+    @Override
+    public R<List<StockSearchDomain>> searchStock(String searchStr) {
+            List<StockSearchDomain> data =
+                    stockBusinessMapper.searchStock(searchStr);
+            return R.ok(data);
+
     }
 
     @Override
